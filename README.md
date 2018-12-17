@@ -17,7 +17,7 @@ Software components
 ===================
 - Ubuntu 18.04 LTS Server
 - ROS2 Crystal
-- Python3 PyMata-AIO
+- PyMata-AIO
 - py_trees_ros
 
 All samples are pure python3 programs
