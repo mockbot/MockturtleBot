@@ -7,9 +7,11 @@ Hardware components
 ===================
 - Intel NUC 12V
 - Arduino NANO 
+- LiFePO Accu 12V 10Ah
 - RC car servocontroller
 - DC motors
 - Intel R200 / Kinect V1
+- Sonar HC-SR04
 
 Software components
 ===================
