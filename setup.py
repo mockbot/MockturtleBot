@@ -22,8 +22,8 @@ setup(
     test_suite='test',
     entry_points={
         'console_scripts': [
-            'listener_py = listener_py:main',
-            'talker_py = talker_py:main',
+            'pymatadriver_py = pymatadriver_py:main',
+            'pytreesdriver_py = pytreesdriver_py:main',
         ],
     },
 )
