@@ -2,29 +2,30 @@
 
 VERSION="2018-12-29"
 
-print("PymataDriver "+VERSION+"\n"
+print("PymataDriver "+VERSION+"\n")
 
 from pymata_aio.pymata3 import PyMata3
 from pymata_aio.constants import Constants
 import sys
 import signal
 
-def analog_callback(data):
+# callback for adc input, e.g. battery voltage
+def adc_callback(data):
     # data[0] is the pin number and data[1] is the changed value
-    print("A"+str(data[0])+":"+str(data[1]))
+    print("ADC"+str(data[0])+":"+str(data[1]))
     #return (data[0],data[1])
 
 try:
     board = PyMata3()
-    board.set_pin_mode(1, Constants.ANALOG, analog_callback)
+    board.set_pin_mode(0, Constants.ANALOG, adc_callback)
+    board.set_pin_mode(1, Constants.ANALOG, adc_callback)
     '''
-    board.set_pin_mode(2, Constants.ANALOG, analog_callback)
-    board.set_pin_mode(3, Constants.ANALOG, analog_callback)
-    board.set_pin_mode(4, Constants.ANALOG, analog_callback)
-    board.set_pin_mode(5, Constants.ANALOG, analog_callback)
-    board.set_pin_mode(6, Constants.ANALOG, analog_callback)
-    board.set_pin_mode(7, Constants.ANALOG, analog_callback)
-    board.set_pin_mode(0, Constants.ANALOG, analog_callback)
+    board.set_pin_mode(2, Constants.ANALOG, adc_callback)
+    board.set_pin_mode(3, Constants.ANALOG, adc_callback)
+    board.set_pin_mode(4, Constants.ANALOG, adc_callback)
+    board.set_pin_mode(5, Constants.ANALOG, adc_callback)
+    board.set_pin_mode(6, Constants.ANALOG, adc_callback)
+    board.set_pin_mode(7, Constants.ANALOG, adc_callback)
     '''
 
 except KeyboardInterrupt:
