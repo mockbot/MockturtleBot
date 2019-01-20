@@ -12,7 +12,9 @@ import signal
 
 # ping callback function
 def cb_ping(data):
-    print(str(data[1]) + ' cm')
+    if data[1] > 0:
+        sonar_distance=data[1]/100
+        print(str(sonar_distance) + ' m')
 
 
 try:
