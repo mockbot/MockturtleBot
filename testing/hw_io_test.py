@@ -12,6 +12,17 @@ from pymata_aio.constants import Constants
 import sys
 import signal
 
+ADC_PIN_A   = 0
+ADC_PIN_B   = 1
+ADC_PIN_C   = 2
+ADC_PIN_D   = 3
+ADC_PIN_E   = 4
+ADC_PIN_F   = 5
+ADC_PIN_G   = 6
+ADC_PIN_H   = 7
+
+USS_PIN_A   = 12    # ultra sonic sensor 
+
 SERVO_PIN_A = 9     # left motor controller
 SERVO_PIN_B = 10    # right motor controller
 SERVO_PIN_C = 11    # servo
@@ -22,12 +33,11 @@ def adc_callback(data):
     print("ADC"+str(data[0])+":"+str(data[1]))
 
 # callback for ultra sonic sensor, e.g. distance to object
-def ping_callback(data):
+def uss_ping_callback(data):
   if data[1] > 0:
-    sonar_distance=data[1]/100
-    print("USS"+str(data[0])+":"+str(sonar_distance))
+    print("USS0"+":"+str(data[1]))
 
-# calibrate motorcontroller for position NULL=90
+# calibrate motorcontroller position NULL=90
 def calibrate_servos():
     board.analog_write(SERVO_PIN_A, 90)
     board.analog_write(SERVO_PIN_B, 90)
@@ -45,20 +55,20 @@ def calibrate_servos():
     board.analog_write(SERVO_PIN_B, 90)
     board.analog_write(SERVO_PIN_C, 90)
 
-def setup()
-  # initialise arduino board
-  board = PyMata3()
+def setup_io_pins():
   # setup ADC pins
-  board.set_pin_mode(0, Constants.ANALOG, adc_callback)
-  board.set_pin_mode(1, Constants.ANALOG, adc_callback)
-  board.set_pin_mode(2, Constants.ANALOG, adc_callback)
-  board.set_pin_mode(3, Constants.ANALOG, adc_callback)
-  board.set_pin_mode(4, Constants.ANALOG, adc_callback)
-  board.set_pin_mode(5, Constants.ANALOG, adc_callback)
-  board.set_pin_mode(6, Constants.ANALOG, adc_callback)
-  board.set_pin_mode(7, Constants.ANALOG, adc_callback)
-  # setup ultra sonar pin
-  board.sonar_config(12, 12, ping_callback)
+  board.set_pin_mode(ADC_PIN_A, Constants.ANALOG, adc_callback)
+  '''
+  board.set_pin_mode(ADC_PIN_B, Constants.ANALOG, adc_callback)
+  board.set_pin_mode(ADC_PIN_C, Constants.ANALOG, adc_callback)
+  board.set_pin_mode(ADC_PIN_D, Constants.ANALOG, adc_callback)
+  board.set_pin_mode(ADC_PIN_E, Constants.ANALOG, adc_callback)
+  board.set_pin_mode(ADC_PIN_F, Constants.ANALOG, adc_callback)
+  board.set_pin_mode(ADC_PIN_G, Constants.ANALOG, adc_callback)
+  board.set_pin_mode(ADC_PIN_H, Constants.ANALOG, adc_callback)
+  '''
+  # setup ultra sonar sensor pin
+  board.sonar_config(USS_PIN_A, USS_PIN_A, uss_ping_callback)
   # setup servo pins, e.g. motor controller or servos
   board.servo_config(SERVO_PIN_A)
   board.servo_config(SERVO_PIN_B)
@@ -67,7 +77,7 @@ def setup()
 # Signal handler to trap control C
 def _signal_handler(sig, frame):
     if board is not None:
-        print('\nCtrl+C for abort detected')
+        print('\nCtrl+C detected. Terminate')
         sys.exit(1)
 
 signal.signal(signal.SIGINT, _signal_handler)
@@ -78,10 +88,13 @@ if not sys.platform.startswith('win32'):
     signal.signal(signal.SIGALRM, _signal_handler)
 
 try:
-  setup()
+  # initialise arduino board
+  board = PyMata3()
+  setup_io_pins()
   calibrate_servos()
 except KeyboardInterrupt:
     sys.exit(0)
 
 while True:
     board.sleep(.1)
+
